@@ -23,18 +23,20 @@ export default function NutritionCalculator() {
     very: 1.725
   };
 
-  const calculateResults = () => {
+ const calculateResults = () => {
     // Convert height to cm
     const heightInCm = ((parseInt(formData.heightFeet) * 12) + parseInt(formData.heightInches)) * 2.54;
     // Convert weight to kg
     const weightInKg = parseFloat(formData.weightLbs) * 0.45359237;
+    // Convert age to number
+    const age = parseInt(formData.age);
 
     // Calculate BMR using Mifflin-St. Jeor
     let bmr;
     if (formData.gender === 'female') {
-      bmr = (10 * weightInKg) + (6.25 * heightInCm) - (5 * formData.age) - 161;
+      bmr = (10 * weightInKg) + (6.25 * heightInCm) - (5 * age) - 161;
     } else {
-      bmr = (10 * weightInKg) + (6.25 * heightInCm) - (5 * formData.age) + 5;
+      bmr = (10 * weightInKg) + (6.25 * heightInCm) - (5 * age) + 5;
     }
 
     // Calculate TDEE
@@ -58,8 +60,8 @@ export default function NutritionCalculator() {
 
     // Calculate ABW if needed
     let abwLbs = ibwLbs;
-    if (formData.weightLbs > (ibwLbs * 1.2)) {
-      abwLbs = ibwLbs + (0.4 * (formData.weightLbs - ibwLbs));
+    if (parseFloat(formData.weightLbs) > (ibwLbs * 1.2)) {
+      abwLbs = ibwLbs + (0.4 * (parseFloat(formData.weightLbs) - ibwLbs));
     }
 
     // Calculate protein needs
