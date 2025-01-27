@@ -2,8 +2,28 @@
 
 import { useState } from 'react';
 
+type FormData = {
+  age: string;
+  weightLbs: string;
+  heightFeet: string;
+  heightInches: string;
+  gender: string;
+  activityLevel: string;
+  comorbidities: string[];
+  weightLossGoal: string;
+}
+
+type Results = {
+  bmr: number;
+  tdee: number;
+  targetCalories: number;
+  proteinRange: string;
+  ibw: number;
+  abw: number;
+}
+
 export default function NutritionCalculator() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     age: '',
     weightLbs: '',
     heightFeet: '',
@@ -14,7 +34,7 @@ export default function NutritionCalculator() {
     weightLossGoal: 'moderate'
   });
 
-  const [results, setResults] = useState(null);
+  const [results, setResults] = useState<Results | null>(null);
 
   const activityFactors = {
     sedentary: 1.2,
@@ -23,7 +43,7 @@ export default function NutritionCalculator() {
     very: 1.725
   };
 
- const calculateResults = () => {
+  const calculateResults = () => {
     // Convert height to cm
     const heightInCm = ((parseInt(formData.heightFeet) * 12) + parseInt(formData.heightInches)) * 2.54;
     // Convert weight to kg
@@ -40,7 +60,7 @@ export default function NutritionCalculator() {
     }
 
     // Calculate TDEE
-    const tdee = bmr * activityFactors[formData.activityLevel];
+    const tdee = bmr * activityFactors[formData.activityLevel as keyof typeof activityFactors];
 
     // Calculate target calories based on weight loss goal
     const calorieDeficits = {
@@ -48,7 +68,7 @@ export default function NutritionCalculator() {
       moderate: 500,
       aggressive: 750
     };
-    const targetCalories = tdee - calorieDeficits[formData.weightLossGoal];
+    const targetCalories = tdee - calorieDeficits[formData.weightLossGoal as keyof typeof calorieDeficits];
 
     // Calculate IBW
     const baseHeight = 5 * 12; // 5 feet in inches
