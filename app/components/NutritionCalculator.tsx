@@ -34,12 +34,6 @@ type Results = {
   }
 }
 
-type Tooltip = {
-  visible: boolean;
-  content: string;
-  position: { x: number; y: number };
-}
-
 const CONDITION_ADJUSTMENTS = {
   diabetes: {
     protein: "1.2-1.5g/kg ABW",
@@ -89,11 +83,7 @@ export default function NutritionCalculator() {
   });
 
   const [results, setResults] = useState<Results | null>(null);
-  const [tooltip, setTooltip] = useState<Tooltip>({
-    visible: false,
-    content: '',
-    position: { x: 0, y: 0 }
-  });
+  const [showReferences, setShowReferences] = useState(false);
 
   const activityFactors = {
     sedentary: 1.2,
@@ -175,18 +165,6 @@ export default function NutritionCalculator() {
         notes: ""
       }
     });
-  };
-
-  const showTooltip = (e: React.MouseEvent, content: string) => {
-    setTooltip({
-      visible: true,
-      content,
-      position: { x: e.clientX, y: e.clientY }
-    });
-  };
-
-  const hideTooltip = () => {
-    setTooltip(prev => ({ ...prev, visible: false }));
   };
 
   const handleConditionChange = (condition: string) => {
@@ -320,11 +298,10 @@ export default function NutritionCalculator() {
               <div className="flex items-center">
                 <h4 className="font-medium">Anthropometrics</h4>
                 <button
-                  className="ml-2 text-blue-600 text-sm"
-                  onMouseEnter={(e) => showTooltip(e, TOOLTIPS.bmi)}
-                  onMouseLeave={hideTooltip}
+                  className="ml-2 px-2 py-1 text-blue-600 hover:bg-blue-100 rounded-full"
+                  title={TOOLTIPS.bmi}
                 >
-                  ⓘ
+                  ℹ
                 </button>
               </div>
               <p>BMI: {results.bmi} kg/m²</p>
@@ -337,11 +314,10 @@ export default function NutritionCalculator() {
               <div className="flex items-center">
                 <h4 className="font-medium">Energy Needs</h4>
                 <button
-                  className="ml-2 text-blue-600 text-sm"
-                  onMouseEnter={(e) => showTooltip(e, TOOLTIPS.energy)}
-                  onMouseLeave={hideTooltip}
+                  className="ml-2 px-2 py-1 text-blue-600 hover:bg-blue-100 rounded-full"
+                  title={TOOLTIPS.energy}
                 >
-                  ⓘ
+                  ℹ
                 </button>
               </div>
               <p>BMR: {results.bmr} calories</p>
@@ -353,11 +329,10 @@ export default function NutritionCalculator() {
               <div className="flex items-center">
                 <h4 className="font-medium">Protein Needs</h4>
                 <button
-                  className="ml-2 text-blue-600 text-sm"
-                  onMouseEnter={(e) => showTooltip(e, TOOLTIPS.protein)}
-                  onMouseLeave={hideTooltip}
+                  className="ml-2 px-2 py-1 text-blue-600 hover:bg-blue-100 rounded-full"
+                  title={TOOLTIPS.protein}
                 >
-                  ⓘ
+                  ℹ
                 </button>
               </div>
               <p>Recommended Range: {results.proteinRange}g/day</p>
@@ -380,46 +355,44 @@ export default function NutritionCalculator() {
               </div>
             )}
           </div>
-        </div>
-      )}
+        
+          {/* Clinical References Section */
+           <div className="mt-8">
+            <button 
+              onClick={() => setShowReferences(!showReferences)}
+              className="w-full bg-gray-100 p-4 rounded flex justify-between items-center hover:bg-gray-200"
+            >
+              <span className="font-medium">Evidence-Based References</span>
+              <span>{showReferences ? '−' : '+'}</span>
+            </button>
+            
+            {showReferences && (
+              <div className="mt-2 bg-gray-50 p-4 rounded border">
+                <div className="text-sm space-y-2">
+                  <p className="font-semibold">Protein Recommendations:</p>
+                  <ul className="list-disc pl-4 mb-4">
+                    <li>Leidy et al. (2015) - Systematic review supporting 1.2-1.6g/kg for weight loss</li>
+                    <li>AND/AACE/TOS Guidelines - Minimum 60g/day protein</li>
+                    <li>ASPEN Guidelines for Obesity (2016)</li>
+                  </ul>
+                  
+                  <p className="font-semibold">Energy Calculations:</p>
+                  <ul className="list-disc pl-4 mb-4">
+                    <li>Mifflin-St. Jeor equation - Most accurate for obesity (Frankenfield et al., 2005)</li>
+                    <li>Activity factors validated in systematic review (McMurray et al., 2014)</li>
+                  </ul>
 
-      {/* Clinical References Section */}
-      <div className="mt-8 bg-gray-50 p-4 rounded">
-        <h4 className="font-medium mb-2">Evidence-Based References</h4>
-        <div className="text-sm space-y-2">
-          <p><strong>Protein Recommendations:</strong></p>
-          <ul className="list-disc pl-4">
-            <li>Leidy et al. (2015) - Systematic review supporting 1.2-1.6g/kg for weight loss</li>
-            <li>AND/AACE/TOS Guidelines - Minimum 60g/day protein</li>
-            <li>ASPEN Guidelines for Obesity (2016)</li>
-          </ul>
-          
-          <p><strong>Energy Calculations:</strong></p>
-          <ul className="list-disc pl-4">
-            <li>Mifflin-St. Jeor equation - Most accurate for obesity (Frankenfield et al., 2005)</li>
-            <li>Activity factors validated in systematic review (McMurray et al., 2014)</li>
-          </ul>
-
-          <p><strong>Clinical Guidelines:</strong></p>
-          <ul className="list-disc pl-4">
-            <li>Academy of Nutrition and Dietetics Evidence Analysis Library</li>
-            <li>AACE/ACE Guidelines for Obesity Management (2016)</li>
-            <li>KDIGO Guidelines for CKD (2020)</li>
-            <li>ADA Standards of Care (2023)</li>
-          </ul>
-        </div>
-      </div>
-
-      {/* Tooltip display */}
-      {tooltip.visible && (
-        <div 
-          className="fixed bg-black text-white p-2 rounded text-sm max-w-xs z-50"
-          style={{
-            left: tooltip.position.x + 10,
-            top: tooltip.position.y + 10
-          }}
-        >
-          {tooltip.content}
+                  <p className="font-semibold">Clinical Guidelines:</p>
+                  <ul className="list-disc pl-4">
+                    <li>Academy of Nutrition and Dietetics Evidence Analysis Library</li>
+                    <li>AACE/ACE Guidelines for Obesity Management (2016)</li>
+                    <li>KDIGO Guidelines for CKD (2020)</li>
+                    <li>ADA Standards of Care (2023)</li>
+                  </ul>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>
