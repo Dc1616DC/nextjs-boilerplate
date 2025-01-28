@@ -60,7 +60,6 @@ const CONDITION_ADJUSTMENTS = {
     macros: { protein: "20-25%", carbs: "45-50%", fat: "25-30%" }
   }
 } as const;
-
 const TOOLTIPS = {
   bmi: "Body Mass Index calculation based on WHO standards. BMI = weight(kg)/height(m)²",
   ibw: "Ideal Body Weight calculated using Hamwi equation: Female: 100lb + 5lb/inch >5ft; Male: 106lb + 6lb/inch >5ft",
@@ -175,7 +174,6 @@ export default function NutritionCalculator() {
         : [...prev.conditions, condition]
     }));
   };
-
   return (
     <div className="max-w-4xl mx-auto">
       <form onSubmit={(e) => { e.preventDefault(); calculateResults(); }} className="space-y-4">
@@ -263,7 +261,6 @@ export default function NutritionCalculator() {
             </select>
           </div>
         </div>
-
         <div className="mt-4">
           <label className="block text-sm font-medium mb-2">Medical Conditions</label>
           <div className="grid grid-cols-2 gap-2">
@@ -355,9 +352,9 @@ export default function NutritionCalculator() {
               </div>
             )}
           </div>
-        
-          {/* Clinical References Section */
-           <div className="mt-8">
+
+          {/* Clinical References Section */}
+          <div className="mt-8">
             <button 
               onClick={() => setShowReferences(!showReferences)}
               className="w-full bg-gray-100 p-4 rounded flex justify-between items-center hover:bg-gray-200"
