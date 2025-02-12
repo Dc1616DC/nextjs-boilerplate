@@ -61,13 +61,13 @@ const CONDITION_ADJUSTMENTS = {
   }
 } as const;
 const TOOLTIPS = {
-  bmi: "Body Mass Index calculation based on WHO standards. BMI = weight(kg)/height(m)²",
-  ibw: "Ideal Body Weight calculated using Hamwi equation: Female: 100lb + 5lb/inch >5ft; Male: 106lb + 6lb/inch >5ft",
-  abw: "Adjusted Body Weight uses sliding scale based on BMI ranges to account for metabolically active tissue",
-  protein: "Based on Leidy et al. (2015) systematic review showing improved outcomes with 1.2-1.6g/kg protein during weight loss",
-  energy: "Mifflin-St. Jeor equation validated for individuals with obesity. Includes activity and thermogenic adjustments",
-  conditions: "Medical condition adjustments based on AND/ASPEN guidelines and clinical evidence"
-};
+  bmi: "BMI (Body Mass Index) is a measure of body fat based on height and weight. The latest guidelines recommend using the new BMI categorization standards which may impact treatment decisions.",
+  ibw: "Ideal Body Weight (IBW) estimates a healthy weight range using the Hamwi equation. Recent changes in IBW calculations suggest considering individual factors such as muscle mass and body composition.",
+  abw: "Adjusted Body Weight (ABW) estimates metabolically active tissue for accurate protein needs. Updated ABW calculations take into account changes in body composition during weight loss.",
+  protein: "Protein intake is crucial for muscle maintenance during weight loss. For individuals using GLP-1 receptor agonists, optimal protein intake may need to be higher to support metabolic function.",
+  energy: "Energy needs are calculated using the Mifflin-St. Jeor equation. Adjustments to BMR and TDEE calculations should be made based on individual metabolic factors and activity levels.",
+  glp1: "GLP-1 receptor agonists slow gastric emptying and reduce appetite. It is important to monitor protein intake and adjust accordingly to support muscle maintenance and metabolic function.",
+} as const;
 
 export default function NutritionCalculator() {
   const [formData, setFormData] = useState<FormData>({
